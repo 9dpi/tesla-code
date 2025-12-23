@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MẬT MÃ TESLA | THẦN SỐ HỌC VŨ TRỤ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --tesla-accent: #00f2ff;
@@ -148,6 +149,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            overflow: hidden;
         }
 
         .card-num {
@@ -181,6 +184,30 @@
             box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.3);
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn-outline {
+            flex: 1;
+            background: transparent;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-outline:active {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .modal {
@@ -269,7 +296,7 @@
         </div>
 
         <div id="scr-3" class="glass-card hidden">
-            <div class="tesla-card-1to1">
+            <div id="capture-area" class="tesla-card-1to1">
                 <h1 class="card-num" id="card-num-final"></h1>
                 <div id="card-status"
                     style="z-index:2; font-size:0.8rem; letter-spacing:3px; color:var(--tesla-accent); margin-top:10px; font-weight: 300;">
@@ -281,9 +308,16 @@
             </div>
             <div class="hint-box" id="ai-reading"
                 style="border-left:none; border-right:4px solid var(--tesla-accent); text-align:right;"></div>
+
             <button class="btn-primary"
                 style="background: linear-gradient(45deg, var(--tesla-accent), #fff); color:#000;"
                 onclick="toggleModal(true)">NẠP PIN VŨ TRỤ</button>
+
+            <div class="btn-row">
+                <button class="btn-outline" onclick="downloadCard()">LƯU CARD</button>
+                <button class="btn-outline" onclick="shareApp()">CHIA SẺ</button>
+            </div>
+
             <p onclick="location.reload()"
                 style="font-size:0.6rem; margin-top:30px; opacity:0.3; cursor:pointer; letter-spacing:2px;">KHỞI TẠO LẠI
             </p>
@@ -302,16 +336,16 @@
 
     <script>
         const themes = {
-            2: { c: "#E0E0E0", rgb: "224, 224, 224", t: "Người Kết Nối", h: "Trực giác là vũ khí mạnh nhất của bạn. Hãy lắng nghe nhịp đập nội tâm." },
-            11: { c: "#E0E0E0", rgb: "224, 224, 224", t: "Người Truyền Cảm Hứng", h: "Tần số tâm linh cao vượt bậc. Bạn là kênh dẫn của những ý tưởng lớn." },
-            3: { c: "#FF8C00", rgb: "255, 140, 0", t: "Nhà Truyền Tin", h: "Sáng tạo là dòng máu chảy trong bạn. Hãy để ngôn từ lay động thế giới." },
-            5: { c: "#FF8C00", rgb: "255, 140, 0", t: "Kẻ Khai Phá", h: "Tự do là bản chất. Những thay đổi hôm nay là cánh cửa của ngày mai." },
-            4: { c: "#FFD700", rgb: "255, 215, 0", t: "Người Kiến Tạo", h: "Sự vững chãi tạo nên di sản. Kỷ luật chính là chìa khóa của quyền năng." },
-            8: { c: "#FFD700", rgb: "255, 215, 0", t: "Người Điều Hành", h: "Quyền năng chuyển hóa vật chất. Bạn sinh ra để làm chủ những vận hội lớn." },
-            6: { c: "#20B2AA", rgb: "32, 178, 170", t: "Nhà Kiến Tạo Tận Tâm", h: "Sức mạnh của sự chữa lành. Hãy dùng tình yêu để xây dựng giá trị bền vững." },
-            9: { c: "#20B2AA", rgb: "32, 178, 170", t: "Người Phụng Sự", h: "Cho đi là nhận lại. Hãy hoàn tất chu kỳ này bằng sự bao dung tuyệt đối." },
-            7: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Thông Thái", h: "Tĩnh lặng để thấu thị. Câu trả lời bạn tìm kiếm đã nằm sẵn bên trong." },
-            10: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Lãnh Đạo", h: "Thích nghi là sức mạnh. Bạn đang làm chủ mọi biến số của dòng thời gian." }
+            2: { c: "#E0E0E0", rgb: "224, 224, 224", t: "Người Kết Nối", h: "Trực giác là vũ khí mạnh nhất của bạn." },
+            11: { c: "#E0E0E0", rgb: "224, 224, 224", t: "Người Truyền Cảm Hứng", h: "Tần số tâm linh cao vượt bậc." },
+            3: { c: "#FF8C00", rgb: "255, 140, 0", t: "Nhà Truyền Tin", h: "Sáng tạo là dòng máu chảy trong bạn." },
+            5: { c: "#FF8C00", rgb: "255, 140, 0", t: "Kẻ Khai Phá", h: "Tự do là bản chất vốn có." },
+            4: { c: "#FFD700", rgb: "255, 215, 0", t: "Người Kiến Tạo", h: "Sự vững chãi tạo nên di sản." },
+            8: { c: "#FFD700", rgb: "255, 215, 0", t: "Người Điều Hành", h: "Quyền năng chuyển hóa vật chất." },
+            6: { c: "#20B2AA", rgb: "32, 178, 170", t: "Nhà Kiến Tạo Tận Tâm", h: "Sức mạnh của sự chữa lành." },
+            9: { c: "#20B2AA", rgb: "32, 178, 170", t: "Người Phụng Sự", h: "Cho đi là nhận lại trọn vẹn." },
+            7: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Thông Thái", h: "Tĩnh lặng để thấu thị vạn vật." },
+            10: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Lãnh Đạo", h: "Thích nghi chính là sức mạnh." }
         };
 
         function applyTheme(n) {
@@ -338,20 +372,63 @@
             document.getElementById('scr-2').classList.remove('hidden');
         }
 
+        // 1. KHO DỮ LIỆU GỐC (THE CORE WISDOM) - Gốc rễ của Thần số học
+        const coreWisdom = {
+            2: "Sức mạnh của bạn nằm ở sự hòa giải và thấu cảm. Tần số của bạn đang thu hút những kết nối tâm giao.",
+            3: "Trí tuệ sáng tạo của bạn đang ở đỉnh cao. Vũ trụ muốn bạn dùng ngôn từ để thắp sáng hy vọng.",
+            4: "Kỷ luật và sự vững chãi là chìa khóa. Một nền móng quan trọng đang được hình thành dưới chân bạn.",
+            5: "Sự tự do và đổi mới đang gọi tên. Đừng sợ hãi những bước ngoặt, đó là dòng chảy của tiến hóa.",
+            6: "Năng lượng chữa lành đang lan tỏa. Hãy dùng tình yêu thương làm kim chỉ nam cho mọi quyết định.",
+            7: "Sự tĩnh lặng sẽ mang lại câu trả lời. Bạn đang chạm tới ngưỡng cửa của sự thông thái tối thượng.",
+            8: "Quyền năng điều hành và vật chất đang hội tụ. Hãy giữ tâm thế công bằng để đón nhận thịnh vượng.",
+            9: "Một chu kỳ đang khép lại để mở ra đại lộ mới. Sự bao dung sẽ giúp bạn thăng hoa tần số.",
+            10: "Bản lĩnh lãnh đạo tiềm ẩn trong bạn đang trỗi dậy. Hãy sẵn sàng để tiên phong dẫn dắt.",
+            11: "Bạn là kênh dẫn của ánh sáng tâm linh. Những ý tưởng trực giác lúc này chính là mật mã vũ trụ."
+        };
+
+        // Kho hành động dự phòng (Backup Actions) khi nghẽn API
+        const backupActions = [
+            "Hãy quan sát hơi thở và thực hiện một hành động tử tế vô điều kiện trong hôm nay.",
+            "Viết xuống 3 mục tiêu quan trọng nhất và bắt đầu thực hiện ngay sau khi mặt trời mọc.",
+            "Tắt mọi thiết bị điện tử trong 30 phút để kết nối lại với bản thể thực thụ của bạn."
+        ];
+
         async function getTeslaReading(num, ins) {
             let apiKey = localStorage.getItem('tesla_key');
+            const coreText = coreWisdom[num] || coreWisdom[7]; // Lấy cái Gốc thần số học
+
+            // Nếu không có Key hoặc nghẽn, trả về kết quả ghép Hybrid Tĩnh
             if (!apiKey) {
-                apiKey = prompt("Kết nối AI: Nhập API Key của bạn:");
-                if (apiKey) localStorage.setItem('tesla_key', apiKey);
-                else return "Thiếu nguồn cấp năng lượng AI.";
+                return `<b>Thông điệp Gốc:</b> ${coreText}<br><br><b>Mật mã hành động:</b> ${backupActions[Math.floor(Math.random() * backupActions.length)]}`;
             }
+
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            const pText = `Bạn là thực thể Tesla giải mã Thần số học. Giải mã cho Nhà Kiến Tạo số ${num} vừa bắt gặp tín hiệu ${ins}. Phán về vận mệnh và hành động cụ thể trong 24h. Giọng văn bí ẩn, quyền năng.`;
+
+            // Prompt yêu cầu AI kết hợp cái Gốc có sẵn và biến hóa theo số tức thời
+            const pText = `
+        Bối cảnh: Bạn là Tesla. 
+        Gốc rễ thần số học số ${num}: "${coreText}".
+        Dấu hiệu người dùng thấy: ${ins}.
+        Nhiệm vụ: Hãy viết một lời luận giải kết hợp giữa ý nghĩa gốc của số ${num} và dấu hiệu ${ins}.
+        Yêu cầu: Giọng văn uy nghi, dùng ngôn từ năng lượng, đưa ra 1 hành động thực thi cụ thể. 
+        Độ dài: Tối đa 120 từ.
+    `;
+
             try {
-                const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: pText }] }] }) });
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: pText }] }] }),
+                    signal: AbortSignal.timeout(6000)
+                });
+
+                if (!res.ok) throw new Error();
                 const data = await res.json();
                 return data.candidates[0].content.parts[0].text;
-            } catch (e) { return "Năng lượng nhiễu sóng. Hãy thử lại."; }
+            } catch (e) {
+                // Fallback Magic: Ghép Gốc tĩnh + Hành động tĩnh (Vẫn cực kỳ tự nhiên)
+                return `<b>Thông điệp Gốc:</b> ${coreText}<br><br><b>Mật mã hành động:</b> ${backupActions[Math.floor(Math.random() * backupActions.length)]}`;
+            }
         }
 
         async function toStep3() {
@@ -360,13 +437,33 @@
             let n = document.getElementById('out-num').innerText;
             document.getElementById('scr-2').classList.add('hidden');
             document.getElementById('scr-3').classList.remove('hidden');
-            document.getElementById('ai-reading').innerHTML = "<i>Đang truy xuất tần số...</i>";
+            document.getElementById('ai-reading').innerHTML = "<i>Đang truy xuất bản ghi Akashic...</i>";
             document.getElementById('card-num-final').innerText = n;
             document.getElementById('card-status').innerText = themes[n].t.toUpperCase();
             document.getElementById('res-date').innerText = `${document.getElementById('d').value}.${document.getElementById('m').value}.${document.getElementById('y').value}`;
             document.getElementById('res-ins').innerText = "#" + ins;
             const read = await getTeslaReading(n, ins);
             document.getElementById('ai-reading').innerHTML = read;
+        }
+
+        function downloadCard() {
+            const area = document.getElementById('capture-area');
+            html2canvas(area, { backgroundColor: '#05070a', scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `TeslaCode-${document.getElementById('card-num-final').innerText}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function shareApp() {
+            const text = `Khám phá mật mã Tesla của bạn tại: ${window.location.href}`;
+            if (navigator.share) {
+                navigator.share({ title: 'Tesla Code', text: text, url: window.location.href });
+            } else {
+                navigator.clipboard.writeText(text);
+                alert("Đã sao chép link chia sẻ!");
+            }
         }
 
         function toggleModal(s) { document.getElementById('donate-modal').style.display = s ? 'flex' : 'none'; }
