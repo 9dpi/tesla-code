@@ -44,12 +44,12 @@
         body,
         .glass-card,
         .btn-primary,
-        .tesla-card-1to1,
+        .tesla-card-small,
         h1,
         h2,
         input,
-        .hint-box {
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        .reading-box {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .app-container {
@@ -137,38 +137,70 @@
             box-shadow: 0 0 15px var(--tesla-accent);
         }
 
-        .tesla-card-1to1 {
-            width: 100%;
+        .tesla-card-small {
+            width: 120px;
             aspect-ratio: 1/1;
-            background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.1) 0%, #000 100%);
+            background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.15) 0%, #000 100%);
             border-radius: 20px;
             border: 1px solid rgba(var(--accent-rgb), 0.3);
-            margin-bottom: 25px;
-            position: relative;
+            margin: 0 auto 20px auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            overflow: hidden;
+            position: relative;
+            padding: 10px;
         }
 
-        .card-num {
-            font-size: 6.5rem;
+        .card-num-small {
+            font-size: 3rem;
             font-weight: bold;
             color: var(--tesla-accent);
-            text-shadow: 0 0 40px var(--tesla-accent);
+            text-shadow: 0 0 20px var(--tesla-accent);
             margin: 0;
         }
 
-        .card-footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
+        .reading-box {
+            background: rgba(var(--accent-rgb), 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 1rem;
+            line-height: 1.7;
+            border-left: 4px solid var(--tesla-accent);
+            color: #eee;
+            min-height: 220px;
             display: flex;
-            justify-content: space-around;
-            font-size: 0.65rem;
-            opacity: 0.5;
+            align-items: flex-start;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .qr-container {
+            display: none;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .qr-image {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 10px;
+            border: 2px solid var(--tesla-accent);
+            margin-bottom: 15px;
+        }
+
+        .back-link {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--tesla-accent);
+            text-decoration: underline;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
             letter-spacing: 1px;
         }
 
@@ -206,54 +238,20 @@
             transition: 0.3s;
         }
 
-        .btn-outline:active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            border: 1px solid var(--tesla-accent);
-            border-radius: 35px;
-            padding: 30px;
-            text-align: center;
-            max-width: 320px;
-            width: 90%;
-        }
-
-        .qr-image {
-            width: 100%;
-            border-radius: 15px;
-            margin: 15px 0;
-            border: 2px solid var(--tesla-accent);
-        }
-
         .hidden {
             display: none;
         }
 
-        .hint-box {
-            background: rgba(var(--accent-rgb), 0.03);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            border-left: 4px solid var(--tesla-accent);
-            color: #ddd;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -265,9 +263,9 @@
             <h1>TESLA CODE</h1>
             <span class="label-tiny">Mật mã ngày sinh</span>
             <div class="input-row">
-                <input type="number" id="d" placeholder="DD" inputmode="numeric">
-                <input type="number" id="m" placeholder="MM" inputmode="numeric">
-                <input type="number" id="y" placeholder="YYYY" inputmode="numeric">
+                <input type="number" id="d" placeholder="DD" inputmode="numeric" min="1" max="31">
+                <input type="number" id="m" placeholder="MM" inputmode="numeric" min="1" max="12">
+                <input type="number" id="y" placeholder="YYYY" inputmode="numeric" min="1900">
             </div>
             <span class="label-tiny">Bản thể năng lượng</span>
             <div class="gender-switch">
@@ -286,32 +284,43 @@
                 id="out-num">0</div>
             <h2 id="out-title"
                 style="color:var(--tesla-accent); font-weight: 300; margin: 5px 0 20px; font-size: 1.1rem;"></h2>
-            <div class="hint-box" id="out-hint"></div>
+            <div class="hint-box" id="out-hint"
+                style="background: rgba(var(--accent-rgb), 0.03); border-radius: 20px; padding: 20px; margin: 20px 0; text-align: left; font-size: 0.9rem; border-left: 4px solid var(--tesla-accent);">
+            </div>
             <hr style="border: 0; border-top: 1px solid #222; margin: 25px 0;">
-            <span class="label-tiny">Con số bạn bắt gặp lúc này?</span>
+            <span class="label-tiny">Con số bạn ấn tượng nhất hôm nay?</span>
             <input type="number" id="ins-num"
                 style="background:#000; border:1px dashed var(--tesla-accent); color:#fff; width:100%; padding:18px; border-radius:15px; text-align:center; margin-bottom:25px; font-size:2rem; outline:none;"
-                placeholder="369">
+                placeholder="">
             <button class="btn-primary" onclick="toStep3()">GIẢI MÃ THẦN SỐ</button>
         </div>
 
         <div id="scr-3" class="glass-card hidden">
-            <div id="capture-area" class="tesla-card-1to1">
-                <h1 class="card-num" id="card-num-final"></h1>
+            <div id="capture-area" class="tesla-card-small">
+                <h1 class="card-num-small" id="card-num-final"></h1>
                 <div id="card-status"
-                    style="z-index:2; font-size:0.8rem; letter-spacing:3px; color:var(--tesla-accent); margin-top:10px; font-weight: 300;">
+                    style="font-size:0.5rem; letter-spacing:1px; color:var(--tesla-accent); margin-top:5px; text-transform:uppercase;">
                 </div>
-                <div class="card-footer">
-                    <span id="res-date"></span>
-                    <span id="res-ins" style="color: var(--tesla-accent); font-weight: bold;"></span>
+                <div style="font-size: 0.5rem; opacity: 0.5; margin-top: 5px;" id="res-ins"></div>
+            </div>
+
+            <span class="label-tiny" id="reading-label" style="text-align: left; display: block;">Thông điệp từ trạm
+                phát Tesla</span>
+
+            <div class="reading-box">
+                <div id="ai-reading-content"></div>
+                <div id="qr-display" class="qr-container">
+                    <p style="font-size:0.7rem; margin:0 0 10px 0; color:var(--tesla-accent);">Cảm ơn Nhà Kiến Tạo đã
+                        nạp năng lượng</p>
+                    <img src="https://lh3.googleusercontent.com/d/1egscXEcGdy9sR3pm13RlO1gZQMLdqdjF" class="qr-image"
+                        alt="QR Donate">
+                    <div class="back-link" onclick="toggleQR(false)">← QUAY LẠI LUẬN GIẢI</div>
                 </div>
             </div>
-            <div class="hint-box" id="ai-reading"
-                style="border-left:none; border-right:4px solid var(--tesla-accent); text-align:right;"></div>
 
-            <button class="btn-primary"
+            <button class="btn-primary" id="btn-nap-pin"
                 style="background: linear-gradient(45deg, var(--tesla-accent), #fff); color:#000;"
-                onclick="toggleModal(true)">NẠP PIN VŨ TRỤ</button>
+                onclick="toggleQR(true)">NẠP PIN VŨ TRỤ</button>
 
             <div class="btn-row">
                 <button class="btn-outline" onclick="downloadCard()">LƯU CARD</button>
@@ -321,16 +330,6 @@
             <p onclick="location.reload()"
                 style="font-size:0.6rem; margin-top:30px; opacity:0.3; cursor:pointer; letter-spacing:2px;">KHỞI TẠO LẠI
             </p>
-        </div>
-    </div>
-
-    <div class="modal" id="donate-modal">
-        <div class="modal-content">
-            <h3 style="color:var(--tesla-accent); margin:0; letter-spacing:2px; font-size: 1.1rem;">TIẾP NĂNG LƯỢNG</h3>
-            <p style="font-size:0.75rem; opacity:0.7; margin:10px 0;">Quét mã để nạp pin cho Trạm phát Tesla</p>
-            <img src="https://lh3.googleusercontent.com/d/1egscXEcGdy9sR3pm13RlO1gZQMLdqdjF" class="qr-image"
-                alt="QR Donate">
-            <button class="btn-primary" onclick="toggleModal(false)">XÁC NHẬN</button>
         </div>
     </div>
 
@@ -348,6 +347,21 @@
             10: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Lãnh Đạo", h: "Thích nghi chính là sức mạnh." }
         };
 
+        const coreWisdom = {
+            2: "Sức mạnh nằm ở thấu cảm. Tần số của bạn thu hút những kết nối tâm giao.",
+            3: "Trí tuệ sáng tạo đang đỉnh cao. Dùng ngôn từ thắp sáng hy vọng.",
+            4: "Kỷ luật là chìa khóa. Một nền móng quan trọng đang hình thành.",
+            5: "Sự đổi mới đang gọi tên. Đó là dòng chảy của tiến hóa.",
+            6: "Năng lượng chữa lành lan tỏa. Hãy dùng tình yêu làm kim chỉ nam.",
+            7: "Tĩnh lặng mang lại câu trả lời. Bạn chạm tới ngưỡng cửa thông thái.",
+            8: "Quyền năng vật chất hội tụ. Giữ tâm thế công bằng để đón thịnh vượng.",
+            9: "Một chu kỳ khép lại cho đại lộ mới. Sự bao dung giúp thăng hoa tần số.",
+            10: "Bản lĩnh lãnh đạo tiềm ẩn trỗi dậy. Sẵn sàng để tiên phong.",
+            11: "Bạn là kênh dẫn ánh sáng tâm linh. Trực giác lúc này chính là mật mã."
+        };
+
+        const backupActions = ["Quan sát hơi thở và thực hiện một hành động tử tế vô điều kiện hôm nay.", "Viết xuống 3 mục tiêu lớn và bắt đầu ngay khi mặt trời mọc.", "Tắt thiết bị điện tử 30 phút để kết nối lại với bản thể thực thụ."];
+
         function applyTheme(n) {
             const theme = themes[n] || themes[7];
             document.documentElement.style.setProperty('--tesla-accent', theme.c);
@@ -361,9 +375,18 @@
         }
 
         function toStep2() {
-            const dI = document.getElementById('d').value, mI = document.getElementById('m').value, yI = document.getElementById('y').value;
-            if (!dI || !mI || !yI) return alert("Nhập mật mã ngày sinh!");
-            let n = calculate(dI, mI, yI);
+            const dI = parseInt(document.getElementById('d').value);
+            const mI = parseInt(document.getElementById('m').value);
+            const yI = parseInt(document.getElementById('y').value);
+            const currentYear = new Date().getFullYear();
+
+            // VALIDATION RULE
+            if (!dI || !mI || !yI) return alert("Vui lòng nhập đầy đủ mật mã ngày sinh!");
+            if (dI < 1 || dI > 31) return alert("Ngày sinh không hợp lệ (1-31)!");
+            if (mI < 1 || mI > 12) return alert("Tháng sinh không hợp lệ (1-12)!");
+            if (yI < 1900 || yI > currentYear) return alert(`Năm sinh phải từ 1900 đến ${currentYear}!`);
+
+            let n = calculate(dI.toString(), mI.toString(), yI.toString());
             applyTheme(n);
             document.getElementById('out-num').innerText = n;
             document.getElementById('out-title').innerText = themes[n].t.toUpperCase();
@@ -372,78 +395,54 @@
             document.getElementById('scr-2').classList.remove('hidden');
         }
 
-        // 1. KHO DỮ LIỆU GỐC (THE CORE WISDOM) - Gốc rễ của Thần số học
-        const coreWisdom = {
-            2: "Sức mạnh của bạn nằm ở sự hòa giải và thấu cảm. Tần số của bạn đang thu hút những kết nối tâm giao.",
-            3: "Trí tuệ sáng tạo của bạn đang ở đỉnh cao. Vũ trụ muốn bạn dùng ngôn từ để thắp sáng hy vọng.",
-            4: "Kỷ luật và sự vững chãi là chìa khóa. Một nền móng quan trọng đang được hình thành dưới chân bạn.",
-            5: "Sự tự do và đổi mới đang gọi tên. Đừng sợ hãi những bước ngoặt, đó là dòng chảy của tiến hóa.",
-            6: "Năng lượng chữa lành đang lan tỏa. Hãy dùng tình yêu thương làm kim chỉ nam cho mọi quyết định.",
-            7: "Sự tĩnh lặng sẽ mang lại câu trả lời. Bạn đang chạm tới ngưỡng cửa của sự thông thái tối thượng.",
-            8: "Quyền năng điều hành và vật chất đang hội tụ. Hãy giữ tâm thế công bằng để đón nhận thịnh vượng.",
-            9: "Một chu kỳ đang khép lại để mở ra đại lộ mới. Sự bao dung sẽ giúp bạn thăng hoa tần số.",
-            10: "Bản lĩnh lãnh đạo tiềm ẩn trong bạn đang trỗi dậy. Hãy sẵn sàng để tiên phong dẫn dắt.",
-            11: "Bạn là kênh dẫn của ánh sáng tâm linh. Những ý tưởng trực giác lúc này chính là mật mã vũ trụ."
-        };
-
-        // Kho hành động dự phòng (Backup Actions) khi nghẽn API
-        const backupActions = [
-            "Hãy quan sát hơi thở và thực hiện một hành động tử tế vô điều kiện trong hôm nay.",
-            "Viết xuống 3 mục tiêu quan trọng nhất và bắt đầu thực hiện ngay sau khi mặt trời mọc.",
-            "Tắt mọi thiết bị điện tử trong 30 phút để kết nối lại với bản thể thực thụ của bạn."
-        ];
-
         async function getTeslaReading(num, ins) {
             let apiKey = localStorage.getItem('tesla_key');
-            const coreText = coreWisdom[num] || coreWisdom[7]; // Lấy cái Gốc thần số học
-
-            // Nếu không có Key hoặc nghẽn, trả về kết quả ghép Hybrid Tĩnh
+            const coreText = coreWisdom[num] || coreWisdom[7];
             if (!apiKey) {
-                return `<b>Thông điệp Gốc:</b> ${coreText}<br><br><b>Mật mã hành động:</b> ${backupActions[Math.floor(Math.random() * backupActions.length)]}`;
+                apiKey = prompt("Kết nối AI: Nhập API Key của bạn:");
+                if (apiKey) localStorage.setItem('tesla_key', apiKey);
+                else return `<b>Gốc thần số:</b> ${coreText}<br><br><b>Mật mã:</b> ${backupActions[0]}`;
             }
-
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-            // Prompt yêu cầu AI kết hợp cái Gốc có sẵn và biến hóa theo số tức thời
-            const pText = `
-        Bối cảnh: Bạn là Tesla. 
-        Gốc rễ thần số học số ${num}: "${coreText}".
-        Dấu hiệu người dùng thấy: ${ins}.
-        Nhiệm vụ: Hãy viết một lời luận giải kết hợp giữa ý nghĩa gốc của số ${num} và dấu hiệu ${ins}.
-        Yêu cầu: Giọng văn uy nghi, dùng ngôn từ năng lượng, đưa ra 1 hành động thực thi cụ thể. 
-        Độ dài: Tối đa 120 từ.
-    `;
-
+            const pText = `Đóng vai Tesla. Gốc thần số ${num}: "${coreText}". Dấu hiệu: ${ins}. Giải mã sự kết hợp và đưa ra 1 hành động thực thi trong 24h. Giọng bí ẩn, quyền năng. Tối đa 120 từ.`;
             try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: pText }] }] }),
-                    signal: AbortSignal.timeout(6000)
-                });
-
-                if (!res.ok) throw new Error();
+                const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: pText }] }] }), signal: AbortSignal.timeout(6000) });
                 const data = await res.json();
                 return data.candidates[0].content.parts[0].text;
-            } catch (e) {
-                // Fallback Magic: Ghép Gốc tĩnh + Hành động tĩnh (Vẫn cực kỳ tự nhiên)
-                return `<b>Thông điệp Gốc:</b> ${coreText}<br><br><b>Mật mã hành động:</b> ${backupActions[Math.floor(Math.random() * backupActions.length)]}`;
-            }
+            } catch (e) { return `<b>Gốc thần số:</b> ${coreText}<br><br><b>Mật mã hành động:</b> ${backupActions[Math.floor(Math.random() * backupActions.length)]}`; }
         }
 
         async function toStep3() {
             let ins = document.getElementById('ins-num').value;
-            if (!ins) return alert("Nhập con số bạn bắt gặp!");
+            if (!ins) return alert("Hãy nhập con số khiến bạn ấn tượng!");
             let n = document.getElementById('out-num').innerText;
             document.getElementById('scr-2').classList.add('hidden');
             document.getElementById('scr-3').classList.remove('hidden');
-            document.getElementById('ai-reading').innerHTML = "<i>Đang truy xuất bản ghi Akashic...</i>";
+            document.getElementById('ai-reading-content').innerHTML = "<i>Đang truy xuất bản ghi Akashic...</i>";
             document.getElementById('card-num-final').innerText = n;
-            document.getElementById('card-status').innerText = themes[n].t.toUpperCase();
-            document.getElementById('res-date').innerText = `${document.getElementById('d').value}.${document.getElementById('m').value}.${document.getElementById('y').value}`;
+            document.getElementById('card-status').innerText = themes[n].t;
             document.getElementById('res-ins').innerText = "#" + ins;
             const read = await getTeslaReading(n, ins);
-            document.getElementById('ai-reading').innerHTML = read;
+            document.getElementById('ai-reading-content').innerHTML = read;
+        }
+
+        function toggleQR(show) {
+            const reading = document.getElementById('ai-reading-content');
+            const qr = document.getElementById('qr-display');
+            const label = document.getElementById('reading-label');
+            const btn = document.getElementById('btn-nap-pin');
+
+            if (show) {
+                reading.style.display = 'none';
+                qr.style.display = 'block';
+                label.innerText = "Năng lượng trao đi";
+                btn.style.opacity = '0.3';
+            } else {
+                reading.style.display = 'block';
+                qr.style.display = 'none';
+                label.innerText = "Thông điệp từ trạm phát Tesla";
+                btn.style.opacity = '1';
+            }
         }
 
         function downloadCard() {
@@ -458,15 +457,10 @@
 
         function shareApp() {
             const text = `Khám phá mật mã Tesla của bạn tại: ${window.location.href}`;
-            if (navigator.share) {
-                navigator.share({ title: 'Tesla Code', text: text, url: window.location.href });
-            } else {
-                navigator.clipboard.writeText(text);
-                alert("Đã sao chép link chia sẻ!");
-            }
+            if (navigator.share) navigator.share({ title: 'Tesla Code', text: text, url: window.location.href });
+            else { navigator.clipboard.writeText(text); alert("Đã sao chép link!"); }
         }
 
-        function toggleModal(s) { document.getElementById('donate-modal').style.display = s ? 'flex' : 'none'; }
         document.getElementById('d').oninput = function () { if (this.value.length == 2) document.getElementById('m').focus() };
         document.getElementById('m').oninput = function () { if (this.value.length == 2) document.getElementById('y').focus() };
     </script>
