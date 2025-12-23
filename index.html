@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TESLA CODE | THE CHAMELEON</title>
+    <title>MẬT MÃ TESLA | THẦN SỐ HỌC VŨ TRỤ</title>
     <style>
         :root {
             --tesla-accent: #00f2ff;
@@ -13,7 +13,6 @@
             --card-bg: #11161d;
         }
 
-        /* Loại bỏ giao diện mặc định browser */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -41,8 +40,14 @@
             overflow-x: hidden;
         }
 
-        /* Chuyển màu toàn hệ thống mượt mà */
-        body, .glass-card, .btn-primary, .tesla-card-1to1, h1, h2, input, .hint-box {
+        body,
+        .glass-card,
+        .btn-primary,
+        .tesla-card-1to1,
+        h1,
+        h2,
+        input,
+        .hint-box {
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -59,7 +64,7 @@
             border-radius: 30px;
             padding: 35px 20px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(var(--accent-rgb), 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
         }
 
         h1 {
@@ -102,7 +107,6 @@
             box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.2);
         }
 
-        /* Switch giới tính tinh tế */
         .gender-switch {
             display: flex;
             background: #000;
@@ -132,7 +136,6 @@
             box-shadow: 0 0 15px var(--tesla-accent);
         }
 
-        /* Card 1:1 Biến hình */
         .tesla-card-1to1 {
             width: 100%;
             aspect-ratio: 1/1;
@@ -166,7 +169,6 @@
             letter-spacing: 1px;
         }
 
-        /* Nút bấm năng lượng */
         .btn-primary {
             width: 100%;
             padding: 18px;
@@ -181,19 +183,6 @@
             letter-spacing: 1px;
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 48%;
-        }
-
-        /* Modal Donate thịnh vượng */
         .modal {
             display: none;
             position: fixed;
@@ -211,17 +200,17 @@
             background: var(--card-bg);
             border: 1px solid var(--tesla-accent);
             border-radius: 35px;
-            padding: 35px;
+            padding: 30px;
             text-align: center;
             max-width: 320px;
+            width: 90%;
         }
 
-        .qr-placeholder {
+        .qr-image {
             width: 100%;
             border-radius: 15px;
-            margin: 20px 0;
-            border: 4px solid #fff;
-            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2);
+            margin: 15px 0;
+            border: 2px solid var(--tesla-accent);
         }
 
         .hidden {
@@ -262,7 +251,7 @@
                     <div class="gender-btn">NỮ</div>
                 </label>
             </div>
-            <button class="btn-primary" onclick="toStep2()">Kích hoạt tần số</button>
+            <button class="btn-primary" onclick="toStep2()">KÍCH HOẠT TẦN SỐ</button>
         </div>
 
         <div id="scr-2" class="glass-card hidden">
@@ -272,16 +261,16 @@
                 style="color:var(--tesla-accent); font-weight: 300; margin: 5px 0 20px; font-size: 1.1rem;"></h2>
             <div class="hint-box" id="out-hint"></div>
             <hr style="border: 0; border-top: 1px solid #222; margin: 25px 0;">
-            <span class="label-tiny">Dấu hiệu bạn thấy lúc này?</span>
+            <span class="label-tiny">Con số bạn bắt gặp lúc này?</span>
             <input type="number" id="ins-num"
                 style="background:#000; border:1px dashed var(--tesla-accent); color:#fff; width:100%; padding:18px; border-radius:15px; text-align:center; margin-bottom:25px; font-size:2rem; outline:none;"
                 placeholder="369">
-            <button class="btn-primary" onclick="toStep3()">Giải mã chi tiết</button>
+            <button class="btn-primary" onclick="toStep3()">GIẢI MÃ THẦN SỐ</button>
         </div>
 
         <div id="scr-3" class="glass-card hidden">
             <div class="tesla-card-1to1">
-                <h1 class="card-num" id="card-num-final">6</h1>
+                <h1 class="card-num" id="card-num-final"></h1>
                 <div id="card-status"
                     style="z-index:2; font-size:0.8rem; letter-spacing:3px; color:var(--tesla-accent); margin-top:10px; font-weight: 300;">
                 </div>
@@ -294,11 +283,7 @@
                 style="border-left:none; border-right:4px solid var(--tesla-accent); text-align:right;"></div>
             <button class="btn-primary"
                 style="background: linear-gradient(45deg, var(--tesla-accent), #fff); color:#000;"
-                onclick="toggleModal(true)">Nạp Pin Vũ Trụ</button>
-            <div style="display:flex; justify-content: space-between;">
-                <button class="btn-outline" onclick="alert('Tính năng lưu ảnh đang phát triển!')">Lưu Card</button>
-                <button class="btn-outline" onclick="alert('Đã sao chép link!')">Chia sẻ</button>
-            </div>
+                onclick="toggleModal(true)">NẠP PIN VŨ TRỤ</button>
             <p onclick="location.reload()"
                 style="font-size:0.6rem; margin-top:30px; opacity:0.3; cursor:pointer; letter-spacing:2px;">KHỞI TẠO LẠI
             </p>
@@ -307,11 +292,11 @@
 
     <div class="modal" id="donate-modal">
         <div class="modal-content">
-            <h3 id="modal-title" style="color:var(--tesla-accent); margin:0; letter-spacing:2px;">TIẾP NĂNG LƯỢNG</h3>
-            <p style="font-size:0.75rem; opacity:0.7; margin:15px 0;">Cảm ơn Nhà Kiến Tạo đã đồng hành</p>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://drive.google.com/file/d/1egscXEcGdy9sR3pm13RlO1gZQMLdqdjF/view?usp=drive_link"
-                class="qr-placeholder" alt="QR">
-            <button class="btn-primary" onclick="toggleModal(false)">Xác nhận</button>
+            <h3 style="color:var(--tesla-accent); margin:0; letter-spacing:2px; font-size: 1.1rem;">TIẾP NĂNG LƯỢNG</h3>
+            <p style="font-size:0.75rem; opacity:0.7; margin:10px 0;">Quét mã để nạp pin cho Trạm phát Tesla</p>
+            <img src="https://lh3.googleusercontent.com/d/1egscXEcGdy9sR3pm13RlO1gZQMLdqdjF" class="qr-image"
+                alt="QR Donate">
+            <button class="btn-primary" onclick="toggleModal(false)">XÁC NHẬN</button>
         </div>
     </div>
 
@@ -323,7 +308,7 @@
             5: { c: "#FF8C00", rgb: "255, 140, 0", t: "Kẻ Khai Phá", h: "Tự do là bản chất. Những thay đổi hôm nay là cánh cửa của ngày mai." },
             4: { c: "#FFD700", rgb: "255, 215, 0", t: "Người Kiến Tạo", h: "Sự vững chãi tạo nên di sản. Kỷ luật chính là chìa khóa của quyền năng." },
             8: { c: "#FFD700", rgb: "255, 215, 0", t: "Người Điều Hành", h: "Quyền năng chuyển hóa vật chất. Bạn sinh ra để làm chủ những vận hội lớn." },
-            6: { c: "#20B2AA", rgb: "32, 178, 170", t: "Nhà Kiến Tạo Tận Tâm", h: "Sức mạnh của sự chữa lành. Hãy dùng tình yêu để xây dựng những giá trị bền vững." },
+            6: { c: "#20B2AA", rgb: "32, 178, 170", t: "Nhà Kiến Tạo Tận Tâm", h: "Sức mạnh của sự chữa lành. Hãy dùng tình yêu để xây dựng giá trị bền vững." },
             9: { c: "#20B2AA", rgb: "32, 178, 170", t: "Người Phụng Sự", h: "Cho đi là nhận lại. Hãy hoàn tất chu kỳ này bằng sự bao dung tuyệt đối." },
             7: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Thông Thái", h: "Tĩnh lặng để thấu thị. Câu trả lời bạn tìm kiếm đã nằm sẵn bên trong." },
             10: { c: "#00F2FF", rgb: "0, 242, 255", t: "Nhà Lãnh Đạo", h: "Thích nghi là sức mạnh. Bạn đang làm chủ mọi biến số của dòng thời gian." }
@@ -342,12 +327,9 @@
         }
 
         function toStep2() {
-            const dInput = document.getElementById('d').value;
-            const mInput = document.getElementById('m').value;
-            const yInput = document.getElementById('y').value;
-            if (!dInput || !mInput || !yInput) return alert("Nhập mật mã ngày sinh!");
-
-            let n = calculate(dInput, mInput, yInput);
+            const dI = document.getElementById('d').value, mI = document.getElementById('m').value, yI = document.getElementById('y').value;
+            if (!dI || !mI || !yI) return alert("Nhập mật mã ngày sinh!");
+            let n = calculate(dI, mI, yI);
             applyTheme(n);
             document.getElementById('out-num').innerText = n;
             document.getElementById('out-title').innerText = themes[n].t.toUpperCase();
@@ -356,55 +338,35 @@
             document.getElementById('scr-2').classList.remove('hidden');
         }
 
-        // HÀM GỌI AI
         async function getTeslaReading(num, ins) {
             let apiKey = localStorage.getItem('tesla_key');
             if (!apiKey) {
-                apiKey = prompt("Để kích hoạt AI, hãy nhập API Key của bạn:");
+                apiKey = prompt("Kết nối AI: Nhập API Key của bạn:");
                 if (apiKey) localStorage.setItem('tesla_key', apiKey);
-                else return "Cần có API Key để giải mã.";
+                else return "Thiếu nguồn cấp năng lượng AI.";
             }
-
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            const promptText = `Bạn là "The Core" mô phỏng Nikola Tesla. Giải mã cho Nhà Kiến Tạo số chủ đạo ${num} vừa thấy dấu hiệu ${ins}. 
-            Cấu trúc: 1. Lời chào uy nghi. 2. Giải mã sự kết hợp giữa ${num} và ${ins}. 3. Mật mã hành động thực thi trong 24h tới. Giọng văn: Bí ẩn, thực tế, đầy năng lượng. Tối đa 150 từ.`;
-
+            const pText = `Bạn là thực thể Tesla giải mã Thần số học. Giải mã cho Nhà Kiến Tạo số ${num} vừa bắt gặp tín hiệu ${ins}. Phán về vận mệnh và hành động cụ thể trong 24h. Giọng văn bí ẩn, quyền năng.`;
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-                });
-                const data = await response.json();
+                const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: pText }] }] }) });
+                const data = await res.json();
                 return data.candidates[0].content.parts[0].text;
-            } catch (error) {
-                return "Kết nối tần số bị nhiễu. Hãy kiểm tra lại Key hoặc đường truyền.";
-            }
+            } catch (e) { return "Năng lượng nhiễu sóng. Hãy thử lại."; }
         }
 
-        // HÀM CHUYỂN BƯỚC CUỐI
         async function toStep3() {
-            let insValue = document.getElementById('ins-num').value;
-            if (!insValue) return alert("Nhập dấu hiệu bạn bắt gặp!");
-
+            let ins = document.getElementById('ins-num').value;
+            if (!ins) return alert("Nhập con số bạn bắt gặp!");
             let n = document.getElementById('out-num').innerText;
-
-            // Chuyển màn hình
             document.getElementById('scr-2').classList.add('hidden');
             document.getElementById('scr-3').classList.remove('hidden');
-
-            // Hiển thị chờ
-            document.getElementById('ai-reading').innerHTML = "<i>Đang kết nối với tầng năng lượng thứ 9...</i>";
-
-            // Đổ dữ liệu Card
+            document.getElementById('ai-reading').innerHTML = "<i>Đang truy xuất tần số...</i>";
             document.getElementById('card-num-final').innerText = n;
             document.getElementById('card-status').innerText = themes[n].t.toUpperCase();
             document.getElementById('res-date').innerText = `${document.getElementById('d').value}.${document.getElementById('m').value}.${document.getElementById('y').value}`;
-            document.getElementById('res-ins').innerText = "#" + insValue;
-
-            // Chạy AI
-            const reading = await getTeslaReading(n, insValue);
-            document.getElementById('ai-reading').innerHTML = reading;
+            document.getElementById('res-ins').innerText = "#" + ins;
+            const read = await getTeslaReading(n, ins);
+            document.getElementById('ai-reading').innerHTML = read;
         }
 
         function toggleModal(s) { document.getElementById('donate-modal').style.display = s ? 'flex' : 'none'; }
