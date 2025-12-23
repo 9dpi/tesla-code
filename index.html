@@ -322,6 +322,63 @@
     </div>
 
     <script>
+        // 1. Hàm gọi AI thực thụ từ Google
+        async function getTeslaReading(num, ins) {
+            // Lấy Key từ bộ nhớ trình duyệt hoặc yêu cầu nhập
+            let apiKey = localStorage.getItem('tesla_key');
+
+            if (!apiKey) {
+                apiKey = prompt("Để kích hoạt tần số AI, vui lòng nhập mã truy cập (API Key) của bạn:");
+                if (apiKey) localStorage.setItem('tesla_key', apiKey);
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+            // System Prompt đã được tối ưu cho Tesla
+            const promptText = `Bạn là "The Core" mô phỏng Nikola Tesla. Giải mã cho Nhà Kiến Tạo số chủ đạo ${num} vừa thấy dấu hiệu ${ins}. 
+    Cấu trúc: 
+    1. Lời chào uy nghi.
+    2. Giải mã sự kết hợp giữa ${num} và ${ins}.
+    3. Mật mã hành động thực thi trong 24h tới.
+    Giọng văn: Bí ẩn, thực tế, đầy năng lượng. Tối đa 150 từ.`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                });
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error(error);
+                return "Kết nối tần số bị nhiễu. Vui lòng kiểm tra lại API Key hoặc đường truyền.";
+            }
+        }
+
+        // 2. Cập nhật lại hàm toStep3() để chạy AI
+        async function toStep3() {
+            let ins = document.getElementById('ins-num').value;
+            if (!ins) return alert("Nhập dấu hiệu bạn bắt gặp!");
+
+            let n = document.getElementById('out-num').innerText;
+
+            // Hiển thị trạng thái đang chờ AI "phán"
+            document.getElementById('ai-reading').innerHTML = "<i>Đang kết nối với tầng năng lượng thứ 9...</i>";
+
+            document.getElementById('scr-2').classList.add('hidden');
+            document.getElementById('scr-3').classList.remove('hidden');
+
+            // Đổ dữ liệu tĩnh vào card trước
+            document.getElementById('card-num-final').innerText = n;
+            document.getElementById('card-status').innerText = themes[n].t.toUpperCase();
+            document.getElementById('res-date').innerText = `${document.getElementById('d').value}.${document.getElementById('m').value}.${document.getElementById('y').value}`;
+            document.getElementById('res-ins').innerText = "#" + ins;
+
+            // Gọi AI và hiển thị kết quả
+            const reading = await getTeslaReading(n, ins);
+            document.getElementById('ai-reading').innerHTML = reading;
+        }
         const themes = {
             2: { c: "#E0E0E0", rgb: "224, 224, 224", t: "Người Kết Nối", h: "Trực giác là vũ khí mạnh nhất của bạn. Hãy lắng nghe nhịp đập nội tâm." },
             11: { c: "#E0E0E0", rgb: "224, 224, 224", t: "Người Truyền Cảm Hứng", h: "Tần số tâm linh cao vượt bậc. Bạn là kênh dẫn của những ý tưởng lớn." },
@@ -376,6 +433,7 @@
         document.getElementById('d').oninput = function () { if (this.value.length == 2) document.getElementById('m').focus() };
         document.getElementById('m').oninput = function () { if (this.value.length == 2) document.getElementById('y').focus() };
     </script>
+
 
 </body>
 
